@@ -1,16 +1,39 @@
-import Link from 'next/link'
-import Head from 'next/head'
-
-export default () => (
-  <div>
-    <Head>
-      <title>Jim Liu</title>
-    </Head>
-
-    <div className="home">
-      <div className="main">
-        <h1>Jim Liu @ NODE+JS INTERACTIVE, Vancouver, BC.</h1>
-        <nav>
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <style>
+      body {
+        display: flex;
+        padding: 0;
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+      }
+      main {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        margin-top: 20px;
+      }
+      h1, h2 {
+        font-weight: 500;
+        font-size: 32px;
+      }
+      h2 {
+        font-weight: 300;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="itsjim.png" alt="itsj.im" title="Jim Liu" height="50" width="184" />
+    <main>
+      <h1>Jim Liu @ NODE+JS INTERACTIVE, Vancouver, BC.</h1>
+      <nav>
           <a target="_blank" href="https://twitter.com/jimcalliu">Twitter</a>
           <a href="mailto:jimcal.liug@gmail.com">Email</a>
         </nav>
@@ -18,41 +41,6 @@ export default () => (
           <li>Work: <a href="https://medium.com/@techatnordstrom"> Tech @ Nordstrom</a></li>
           <li>Volunteer: <a href="https://2018.cascadiajs.com/scholarships"> Scholarships @ CascadiaJS 2018</a> </li>
         </div>
-      </div>
-    </div>
-
-    <style jsx>{`
-      .home {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: -1;
-      }
-
-      .main {
-        flex: none;
-        text-align: center;
-      }
-
-      h1 {
-        font-size: 14px;
-        font-weight: normal;
-      }
-
-      nav {
-        margin-top: 20px;
-      }
-
-      a {
-        display: inline-block;
-        margin: 0 15px;
-        text-decoration: none;
-      }
-    `}</style>
-  </div>
-)
+    </main>
+  </body>
+</html>
