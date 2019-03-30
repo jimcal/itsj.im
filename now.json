@@ -1,5 +1,4 @@
 {
-  "static": {
-    "public": "dist"
-  }
+  "alias": ["itsj.im", "www.itsj.im"],
+  "version": 2
 }
