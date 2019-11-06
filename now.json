@@ -1,4 +1,13 @@
 {
-  "alias": ["itsj.im", "www.itsj.im"],
+  "alias": [
+    "itsj.im",
+    "www.itsj.im"
+  ],
+  "builds": [
+    {
+      "src": "*.html",
+      "use": "@now/static"
+    }
+  ],
   "version": 2
 }
