@@ -10,17 +10,17 @@
     }
   ],
   "routes": [
-    {"src": "twitter", "dest": "https://twitter.com/jimcalliu"},
-    {"src": "github", "dest": "https://github.com/jimcal/jimcal"},
-    {"src": "linkedin", "dest": "https://www.linkedin.com/in/jimycliu/"},
-    {"src": "work", "dest": "https://medium.com/@techatnordstrom"},
-    {"src": "hiring", "dest": "https://nordstrom.wd5.myworkdayjobs.com/en-US/nordstrom_careers/job/Seattle-WA/Engineer-2---Digital-Store-Experience_R-202481"},
-    {"src": "cascadiajs", "dest": "https://2020.cascadiajs.com/"},
-    {"src": "cascadia", "dest": "https://2020.cascadiajs.com/"},
-    {"src": "ticket", "dest": "https://ti.to/event-loop/cascadiajs-2020/discount/jim"},
-    {"src": "home", "dest": ""},
-    {"src": "fizbuz", "dest": "https://fizbuz.com/u/jim"},
-    {"src": "dweb", "dest": "https://twitter.com/DwebSeattle"}
+    {"src": "/twitter", "dest": "https://twitter.com/jimcalliu"},
+    {"src": "/github", "dest": "https://github.com/jimcal/jimcal"},
+    {"src": "/linkedin", "dest": "https://www.linkedin.com/in/jimycliu/"},
+    {"src": "/work", "dest": "https://medium.com/@techatnordstrom"},
+    {"src": "/hiring", "dest": "https://nordstrom.wd5.myworkdayjobs.com/en-US/nordstrom_careers/job/Seattle-WA/Engineer-2---Digital-Store-Experience_R-202481"},
+    {"src": "/cascadiajs", "dest": "https://2020.cascadiajs.com/"},
+    {"src": "/cascadia", "dest": "https://2020.cascadiajs.com/"},
+    {"src": "/ticket", "dest": "https://ti.to/event-loop/cascadiajs-2020/discount/jim"},
+    {"src": "/home", "dest": ""},
+    {"src": "/fizbuz", "dest": "https://fizbuz.com/u/jim"},
+    {"src": "/dweb", "dest": "https://twitter.com/DwebSeattle"}
   ], 
   "version": 2
 }
