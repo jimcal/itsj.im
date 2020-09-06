@@ -10,6 +10,10 @@
     }
   ],
   "routes": [
+    {"src": "/home", "dest": "/index.html"},
+    {"src": "/checkout", "dest": "/checkout.html"},
+    {"src": "/success", "dest": "/success.html"},
+    {"src": "/cancel", "dest": "/cancel.html"},
     {"src": "/twitter", "dest": "https://twitter.com/jimcalliu"},
     {"src": "/github", "dest": "https://github.com/jimcal/jimcal"},
     {"src": "/linkedin", "dest": "https://www.linkedin.com/in/jimycliu/"},
@@ -18,9 +22,9 @@
     {"src": "/cascadiajs", "dest": "https://2020.cascadiajs.com/"},
     {"src": "/cascadia", "dest": "https://2020.cascadiajs.com/"},
     {"src": "/ticket", "dest": "https://ti.to/event-loop/cascadiajs-2020/discount/jim"},
-    {"src": "/home", "dest": ""},
     {"src": "/fizbuz", "dest": "https://fizbuz.com/u/jim"},
-    {"src": "/dweb", "dest": "https://twitter.com/DwebSeattle"}
+    {"src": "/dweb", "dest": "https://twitter.com/DwebSeattle"},
+    {"src": "/zen-twitter", "dest": "https://zen-twitter.itsj.im"}
   ], 
   "version": 2
 }
