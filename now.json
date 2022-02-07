@@ -24,7 +24,8 @@
     {"src": "/ticket", "dest": "https://ti.to/event-loop/cascadiajs-2020/discount/jim"},
     {"src": "/fizbuz", "dest": "https://fizbuz.com/u/jim"},
     {"src": "/dweb", "dest": "https://twitter.com/DwebSeattle"},
-    {"src": "/zen-twitter", "dest": "https://zen-twitter.itsj.im"}
+    {"src": "/zen-twitter", "dest": "https://zen-twitter.itsj.im"},
+    {"src": "/jobs", "dest": "https://itsjim.pallet.xyz/jobs"}
   ], 
   "version": 2
 }
