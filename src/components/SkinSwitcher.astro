@@ -1,0 +1,103 @@
+---
+import { DEFAULT_SKIN, SKINS } from '../lib/skins';
+---
+
+<div class="skin-switcher" role="radiogroup" aria-label="Site skin" data-skin-switcher>
+  {
+    SKINS.map((skin) => (
+      <button
+        type="button"
+        role="radio"
+        data-set-skin={skin.id}
+        aria-checked={skin.id === DEFAULT_SKIN ? 'true' : 'false'}
+        tabindex={skin.id === DEFAULT_SKIN ? 0 : -1}
+      >
+        {skin.label}
+      </button>
+    ))
+  }
+</div>
+<script is:inline>
+  (function () {
+    var root = document.querySelector('[data-skin-switcher]');
+    if (!root) return;
+    var skin = document.documentElement.getAttribute('data-skin');
+    var buttons = root.querySelectorAll('[data-set-skin]');
+    for (var i = 0; i < buttons.length; i++) {
+      var on = buttons[i].getAttribute('data-set-skin') === skin;
+      buttons[i].setAttribute('aria-checked', on ? 'true' : 'false');
+      buttons[i].tabIndex = on ? 0 : -1;
+    }
+  })();
+</script>
+<script>
+  import { SKINS, SKIN_STORAGE_KEY, isSkinId, type SkinId } from '../lib/skins';
+
+  function themeFor(id: SkinId): string | undefined {
+    return SKINS.find((skin) => skin.id === id)?.themeColor;
+  }
+
+  function apply(id: SkinId): void {
+    document.documentElement.dataset.skin = id;
+    try {
+      localStorage.setItem(SKIN_STORAGE_KEY, id);
+    } catch {
+      // Private mode can reject storage. The attribute still applies for this view.
+    }
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const color = themeFor(id);
+    if (meta && color) meta.setAttribute('content', color);
+  }
+
+  function current(): SkinId {
+    const value = document.documentElement.dataset.skin;
+    return isSkinId(value) ? value : 'default';
+  }
+
+  function sync(root: HTMLElement, id: SkinId): void {
+    const buttons = root.querySelectorAll<HTMLButtonElement>('[data-set-skin]');
+    buttons.forEach((button) => {
+      const on = button.dataset.setSkin === id;
+      button.setAttribute('aria-checked', String(on));
+      button.tabIndex = on ? 0 : -1;
+    });
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-skin-switcher]');
+  if (root && root.dataset.bound !== 'true') {
+    root.dataset.bound = 'true';
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-set-skin]')];
+    sync(root, current());
+
+    root.addEventListener('click', (event) => {
+      const button = (event.target as HTMLElement | null)?.closest<HTMLButtonElement>('[data-set-skin]');
+      if (!button) return;
+      const id = button.dataset.setSkin;
+      if (!isSkinId(id)) return;
+      apply(id);
+      sync(root, id);
+      button.focus();
+    });
+
+    root.addEventListener('keydown', (event) => {
+      const keys = ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+      if (!keys.includes(event.key)) return;
+      event.preventDefault();
+      const enabled = buttons.filter((button) => isSkinId(button.dataset.setSkin));
+      if (enabled.length === 0) return;
+      let index = enabled.findIndex((button) => button === document.activeElement);
+      if (index < 0) index = enabled.findIndex((button) => button.dataset.setSkin === current());
+      if (event.key === 'Home') index = 0;
+      else if (event.key === 'End') index = enabled.length - 1;
+      else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') index = (Math.max(index, 0) + 1) % enabled.length;
+      else index = (Math.max(index, 0) - 1 + enabled.length) % enabled.length;
+      const next = enabled[index];
+      if (!next) return;
+      const id = next.dataset.setSkin;
+      if (!isSkinId(id)) return;
+      apply(id);
+      sync(root, id);
+      next.focus();
+    });
+  }
+</script>

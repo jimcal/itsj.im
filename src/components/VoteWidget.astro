@@ -1,0 +1,67 @@
+---
+import { noPercent, yesPercent } from '../lib/format';
+
+interface Props {
+  marketId: string;
+  title: string;
+  probability: number;
+}
+
+const { marketId, title, probability } = Astro.props;
+const yes = yesPercent(probability);
+const no = noPercent(probability);
+---
+
+<div class="vote" data-vote-root data-market={marketId}>
+  <p class="vote-status" data-vote-status>Saved on this device only. The percentage is the seed.</p>
+  <div class="vote-actions" role="group" aria-label={`Vote on: ${title}`}>
+    <button class="vote-btn" type="button" data-vote="yes" aria-pressed="false">
+      Yes <span class="vote-pct">{yes}%</span>
+    </button>
+    <button class="vote-btn" type="button" data-vote="no" aria-pressed="false">
+      No <span class="vote-pct">{no}%</span>
+    </button>
+  </div>
+</div>
+<script>
+  import { voteStore, type VoteChoice } from '../lib/votes';
+
+  const choices = new Set<VoteChoice>(['yes', 'no']);
+
+  async function paint(root: HTMLElement, marketId: string): Promise<void> {
+    const current = await voteStore.getVote(marketId);
+    root.querySelectorAll<HTMLButtonElement>('[data-vote]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.vote === current));
+    });
+    const status = root.querySelector('[data-vote-status]');
+    if (!status) return;
+    status.textContent = current
+      ? `You voted ${current === 'yes' ? 'Yes' : 'No'}. Saved on this device only.`
+      : 'No vote on this device. The percentage is the seed.';
+  }
+
+  async function hydrate(root: HTMLElement): Promise<void> {
+    if (root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+    const marketId = root.dataset.market;
+    if (!marketId) return;
+
+    root.addEventListener('click', async (event) => {
+      const button = (event.target as HTMLElement | null)?.closest<HTMLButtonElement>('[data-vote]');
+      if (!button || !root.contains(button)) return;
+      const choice = button.dataset.vote;
+      if (choice !== 'yes' && choice !== 'no') return;
+      if (!choices.has(choice)) return;
+      const current = await voteStore.getVote(marketId);
+      if (current === choice) await voteStore.clearVote(marketId);
+      else await voteStore.setVote(marketId, choice);
+      await paint(root, marketId);
+    });
+
+    await paint(root, marketId);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-vote-root]').forEach((root) => {
+    void hydrate(root);
+  });
+</script>

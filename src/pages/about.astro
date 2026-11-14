@@ -1,0 +1,72 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { getAbout } from '../lib/content';
+import { graph, personNode } from '../lib/jsonld';
+
+const about = await getAbout();
+const entry = await getEntry('about', about.id);
+if (!entry) throw new Error('Missing about entry.');
+const { Content } = await render(entry);
+---
+
+<Base title="About" description={about.data.positioning} jsonLd={graph([personNode(about)])}>
+  <article class="about">
+    <header class="hero">
+      <img
+        class="avatar"
+        src={about.data.photo}
+        width={about.data.photoWidth}
+        height={about.data.photoHeight}
+        alt={about.data.photoAlt}
+      />
+      <div class="hero-copy">
+        <p class="kicker">{about.data.location}</p>
+        <h1>{about.data.name}</h1>
+        <p class="lede">{about.data.positioning}</p>
+      </div>
+    </header>
+
+    <div class="prose about-body">
+      <Content />
+    </div>
+
+    <section class="section" aria-labelledby="now-heading">
+      <h2 id="now-heading">Now</h2>
+      <ul class="facts">
+        {
+          about.data.roles.map((role) => (
+            <li>
+              {role.title}
+              {' at '}
+              {role.url ? <a href={role.url}>{role.org}</a> : role.org}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="section" aria-labelledby="talk-heading">
+      <h2 id="talk-heading">Talk</h2>
+      <p>
+        <a href={about.data.talk.url}>{about.data.talk.title}</a>
+        {` at ${about.data.talk.event}`}
+      </p>
+    </section>
+
+    <section class="section" aria-labelledby="elsewhere-heading">
+      <h2 id="elsewhere-heading">Elsewhere</h2>
+      <ul class="facts">
+        {
+          about.data.links.map((link) => (
+            <li>
+              <a href={link.href} rel={link.rel === 'me' ? 'me' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </article>
+</Base>

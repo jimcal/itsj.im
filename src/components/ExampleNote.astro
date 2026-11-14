@@ -1,0 +1,22 @@
+---
+interface Props {
+  kind: 'market' | 'post';
+  scope?: 'entry' | 'list';
+}
+
+const { kind, scope = 'entry' } = Astro.props;
+const noun = kind === 'market' ? 'markets' : 'posts';
+const one = kind === 'market' ? 'market' : 'post';
+---
+
+{
+  scope === 'list' ? (
+    <p class="example-banner" role="note">
+      Entries marked Example are placeholders. They are not real {noun} and they are not Jim's view.
+    </p>
+  ) : (
+    <p class="example-banner" role="note">
+      Example content. Not a real {one}, and not Jim's view. Replace this entry.
+    </p>
+  )
+}

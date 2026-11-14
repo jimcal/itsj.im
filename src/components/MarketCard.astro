@@ -1,0 +1,43 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Odds from './Odds.astro';
+import VoteWidget from './VoteWidget.astro';
+import { marketPath } from '../lib/format';
+
+interface Props {
+  market: CollectionEntry<'markets'>;
+  heading: 'h2' | 'h3';
+}
+
+const { market, heading } = Astro.props;
+const href = marketPath(market.id);
+---
+
+<article class="market-card">
+  <p class="market-kicker">
+    <span>{market.data.status === 'open' ? 'Open' : 'Resolved'}</span>
+    {market.data.example && <span class="example-tag">Example</span>}
+  </p>
+  {
+    heading === 'h2' ? (
+      <h2 class="market-title">
+        <a href={href}>{market.data.title}</a>
+      </h2>
+    ) : (
+      <h3 class="market-title">
+        <a href={href}>{market.data.title}</a>
+      </h3>
+    )
+  }
+  <p class="market-thesis">{market.data.thesis}</p>
+  <Odds probability={market.data.yesProbability} />
+  {
+    market.data.status === 'resolved' && market.data.resolution && (
+      <p class="resolution">
+        <span class="resolution-label">Resolution</span>
+        {market.data.resolution}
+      </p>
+    )
+  }
+  <VoteWidget marketId={market.id} title={market.data.title} probability={market.data.yesProbability} />
+</article>
