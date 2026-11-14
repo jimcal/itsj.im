@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import MarketCard from '../../components/MarketCard.astro';
+import ExampleNote from '../../components/ExampleNote.astro';
+import { getMarkets } from '../../lib/content';
+
+const markets = await getMarkets();
+const description =
+  'Prediction-style questions on startup ideas and go-to-market. Seed probabilities, not a live exchange.';
+---
+
+<Base title="Markets" description={description}>
+  <h1>Markets</h1>
+  <p class="lede">{description} A vote stays in this browser.</p>
+  {markets.some((market) => market.data.example) && <ExampleNote kind="market" scope="list" />}
+  {
+    markets.length === 0 ? (
+      <p>No markets yet.</p>
+    ) : (
+      <div class="market-list">
+        {markets.map((market) => (
+          <MarketCard market={market} heading="h2" />
+        ))}
+      </div>
+    )
+  }
+</Base>

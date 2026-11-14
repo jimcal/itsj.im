@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    { "source": "/home", "destination": "/", "permanent": true },
+    { "source": "/canceled", "destination": "/cancel", "permanent": true },
+    { "source": "/checkout.html", "destination": "/checkout", "permanent": true },
+    { "source": "/success.html", "destination": "/success", "permanent": true },
+    { "source": "/cancel.html", "destination": "/cancel", "permanent": true }
+  ]
+}

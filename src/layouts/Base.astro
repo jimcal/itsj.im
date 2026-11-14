@@ -1,0 +1,121 @@
+---
+import '../styles/base.css';
+import '../styles/skins.css';
+import Seo from '../components/Seo.astro';
+import SkinSwitcher from '../components/SkinSwitcher.astro';
+import { getAbout } from '../lib/content';
+import { DEFAULT_SKIN, SKIN_STORAGE_KEY, SKINS } from '../lib/skins';
+import { absoluteUrl, canonicalPath, twitterHandle } from '../lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  ogType?: 'website' | 'article';
+  publishedAt?: Date;
+  updatedAt?: Date;
+  noindex?: boolean;
+  jsonLd?: unknown;
+}
+
+const {
+  title,
+  description,
+  ogType = 'website',
+  publishedAt,
+  updatedAt,
+  noindex = false,
+  jsonLd,
+} = Astro.props;
+
+const about = await getAbout();
+const path = canonicalPath(Astro.url.pathname);
+const documentTitle = title === about.data.name ? title : `${title} · ${about.data.name}`;
+const image = absoluteUrl(about.data.photo);
+const canonical = absoluteUrl(path);
+const themes = Object.fromEntries(SKINS.map((skin) => [skin.id, skin.themeColor]));
+const year = new Date().getFullYear();
+
+function navCurrent(href: string): 'page' | undefined {
+  if (href === '/') return path === '/' ? 'page' : undefined;
+  return path === href || path.startsWith(`${href}/`) ? 'page' : undefined;
+}
+---
+
+<!doctype html>
+<html lang="en" data-skin={DEFAULT_SKIN}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content={themes[DEFAULT_SKIN]} />
+    <meta name="author" content={about.data.name} />
+    <!-- Blocking on purpose: set the saved skin before first paint. -->
+    <script is:inline define:vars={{ storageKey: SKIN_STORAGE_KEY, fallback: DEFAULT_SKIN, themes }}>
+      (function () {
+        var skin = fallback;
+        try {
+          var saved = localStorage.getItem(storageKey);
+          if (saved && Object.prototype.hasOwnProperty.call(themes, saved)) skin = saved;
+        } catch (err) {
+          skin = fallback;
+        }
+        document.documentElement.setAttribute('data-skin', skin);
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta && themes[skin]) meta.setAttribute('content', themes[skin]);
+      })();
+    </script>
+    <Seo
+      title={documentTitle}
+      description={description}
+      image={image}
+      imageAlt={about.data.photoAlt}
+      imageWidth={about.data.photoWidth}
+      imageHeight={about.data.photoHeight}
+      canonical={canonical}
+      ogType={ogType}
+      publishedAt={publishedAt}
+      updatedAt={updatedAt}
+      noindex={noindex}
+      jsonLd={jsonLd}
+      twitter={twitterHandle(about.data.links)}
+    />
+    <link rel="icon" href={about.data.photo} type="image/png" />
+    <link rel="describedby" href="/llms.txt" />
+    <link rel="alternate" type="application/rss+xml" title={`${about.data.name} — Writing`} href="/rss.xml" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap header-bar">
+        <a class="brand" href="/">{about.data.name}</a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/markets" aria-current={navCurrent('/markets')}>Markets</a>
+          <a href="/writing" aria-current={navCurrent('/writing')}>Writing</a>
+          <a href="/about" aria-current={navCurrent('/about')}>About</a>
+        </nav>
+        <SkinSwitcher />
+      </div>
+    </header>
+    <main id="content" class="wrap" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-bar">
+        <p>© {year} {about.data.name}</p>
+        <ul class="footer-links">
+          {
+            about.data.links.map((link) => (
+              <li>
+                <a href={link.href} rel={link.rel === 'me' ? 'me' : undefined}>
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+          <li><a href="/rss.xml">RSS</a></li>
+          <li><a href="/llms.txt">llms.txt</a></li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>

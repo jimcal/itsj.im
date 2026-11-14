@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /checkout
+Disallow: /success
+Disallow: /cancel
+
+Sitemap: https://itsj.im/sitemap-index.xml

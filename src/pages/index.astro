@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import MarketCard from '../components/MarketCard.astro';
+import ExampleNote from '../components/ExampleNote.astro';
+import { getAbout, getFeaturedMarkets, getPosts } from '../lib/content';
+import { formatDate, postPath } from '../lib/format';
+import { graph, personNode, websiteNode } from '../lib/jsonld';
+
+const about = await getAbout();
+const featured = await getFeaturedMarkets(3);
+const posts = await getPosts();
+const latest = posts[0];
+---
+
+<Base title={about.data.name} description={about.data.positioning} jsonLd={graph([websiteNode(about), personNode(about)])}>
+  <section class="hero">
+    <img
+      class="avatar"
+      src={about.data.photo}
+      width={about.data.photoWidth}
+      height={about.data.photoHeight}
+      alt={about.data.photoAlt}
+    />
+    <div class="hero-copy">
+      <p class="kicker">{about.data.name} · {about.data.location}</p>
+      <h1>{about.data.positioning}</h1>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="markets-heading">
+    <div class="section-head">
+      <h2 id="markets-heading">Featured markets</h2>
+      <a href="/markets">All markets</a>
+    </div>
+    {featured.some((market) => market.data.example) && <ExampleNote kind="market" scope="list" />}
+    {
+      featured.length === 0 ? (
+        <p>No featured markets yet.</p>
+      ) : (
+        <div class="market-list">
+          {featured.map((market) => (
+            <MarketCard market={market} heading="h3" />
+          ))}
+        </div>
+      )
+    }
+  </section>
+
+  {
+    latest && (
+      <section class="section" aria-labelledby="writing-heading">
+        <div class="section-head">
+          <h2 id="writing-heading">Writing</h2>
+          <a href="/writing">All writing</a>
+        </div>
+        <article class="post-teaser">
+          {latest.data.example && <p class="example-tag">Example</p>}
+          <h3>
+            <a href={postPath(latest.id)}>{latest.data.title}</a>
+          </h3>
+          <p>{latest.data.description}</p>
+          <time datetime={latest.data.publishedAt.toISOString()}>{formatDate(latest.data.publishedAt)}</time>
+        </article>
+      </section>
+    )
+  }
+</Base>

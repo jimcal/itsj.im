@@ -1,0 +1,19 @@
+---
+import { yesPercent } from '../lib/format';
+
+interface Props {
+  probability: number;
+}
+
+const yes = yesPercent(Astro.props.probability);
+---
+
+<div class="odds" data-lean={yes >= 50 ? 'yes' : 'no'}>
+  <div class="odds-readout">
+    <span class="odds-side">Seed yes</span>
+    <span class="odds-value">{yes}%</span>
+  </div>
+  <div class="odds-bar" aria-hidden="true">
+    <span class="odds-bar-fill" style={`width: ${yes}%`}></span>
+  </div>
+</div>

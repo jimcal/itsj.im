@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPosts } from '../../lib/content';
+import { formatDate, postPath } from '../../lib/format';
+
+const posts = await getPosts();
+const description = 'Writing by Jim Liu.';
+---
+
+<Base title="Writing" description={description}>
+  <h1>Writing</h1>
+  <p class="lede">{description}</p>
+  {
+    posts.some((post) => post.data.example) && (
+      <p class="example-banner" role="note">
+        Entries marked Example are placeholders. They are not Jim's view.
+      </p>
+    )
+  }
+  {
+    posts.length === 0 ? (
+      <p>No posts yet.</p>
+    ) : (
+      <div class="post-list">
+        {posts.map((post) => (
+          <article class="post-teaser">
+            {post.data.example && <p class="example-tag">Example</p>}
+            <h2>
+              <a href={postPath(post.id)}>{post.data.title}</a>
+            </h2>
+            <p>{post.data.description}</p>
+            <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
+          </article>
+        ))}
+      </div>
+    )
+  }
+</Base>

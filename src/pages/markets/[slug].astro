@@ -1,0 +1,63 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ExampleNote from '../../components/ExampleNote.astro';
+import Odds from '../../components/Odds.astro';
+import VoteWidget from '../../components/VoteWidget.astro';
+import { getAbout } from '../../lib/content';
+import { exampleDescription, exampleTitle, formatDate } from '../../lib/format';
+import { graph, personNode, questionNode } from '../../lib/jsonld';
+
+export async function getStaticPaths() {
+  const markets = await getCollection('markets', ({ data }) => {
+    return import.meta.env.DEV || data.draft !== true;
+  });
+  return markets.map((market) => ({ params: { slug: market.id } }));
+}
+
+const slug = Astro.params.slug;
+if (!slug) throw new Error('Missing market slug.');
+
+const market = await getEntry('markets', slug);
+if (!market) throw new Error(`Missing market: ${slug}`);
+
+const about = await getAbout();
+const { Content } = await render(market);
+const title = exampleTitle(market.data.example, market.data.title);
+const description = exampleDescription(market.data.example, market.data.thesis);
+---
+
+<Base
+  title={title}
+  description={description}
+  jsonLd={graph([personNode(about), questionNode(market)])}
+>
+  <article class="market-detail">
+    {market.data.example && <ExampleNote kind="market" />}
+    <header class="market-card">
+      <p class="market-kicker">
+        <span>{market.data.status === 'open' ? 'Open' : 'Resolved'}</span>
+        {market.data.example && <span class="example-tag">Example</span>}
+      </p>
+      <h1 class="market-title">{market.data.title}</h1>
+      <p class="market-thesis">{market.data.thesis}</p>
+      <Odds probability={market.data.yesProbability} />
+      {
+        market.data.status === 'resolved' && market.data.resolution && (
+          <p class="resolution">
+            <span class="resolution-label">Resolution</span>
+            {market.data.resolution}
+          </p>
+        )
+      }
+      <VoteWidget marketId={market.id} title={market.data.title} probability={market.data.yesProbability} />
+      <p class="meta">
+        <time datetime={market.data.publishedAt.toISOString()}>{formatDate(market.data.publishedAt)}</time>
+      </p>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+    <p class="back"><a href="/markets">All markets</a></p>
+  </article>
+</Base>

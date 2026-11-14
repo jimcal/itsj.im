@@ -1,0 +1,142 @@
+/* Skin layer. Same HTML, different tokens and layout.
+   To add a skin:
+   1. Register it in src/lib/skins.ts (id, label, themeColor).
+   2. Add a [data-skin="your-id"] block below, or a new file imported
+      from Base.astro. Override tokens and any layout rules you need.
+      Unset tokens fall through to :root (the clean skin). */
+
+[data-skin="polymarket"] {
+  color-scheme: dark;
+  --bg: #0e1218;
+  --bg-elevated: #171c26;
+  --text: #f4f7fb;
+  --muted: #b4c0d0;
+  --link: #b9dcff;
+  --line: #6d7c93;
+  --rule: #2a3344;
+  --accent: #e7c56a;
+  --focus: #f4f7fb;
+  --yes: #0b7a48;
+  --yes-text: #ffffff;
+  --no: #a12636;
+  --no-text: #ffffff;
+  --yes-ink: #3dce86;
+  --no-ink: #ffb4bc;
+  --bar: #2a3344;
+  --bar-fill: #3dce86;
+  --font-display: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-body: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --measure: 72rem;
+}
+
+[data-skin="polymarket"] body {
+  background-image: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-skin="polymarket"] .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+  border-bottom-color: var(--line);
+}
+
+[data-skin="polymarket"] .hero {
+  margin-top: 1.25rem;
+  padding: 1.15rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+[data-skin="polymarket"] .market-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+[data-skin="polymarket"] .market-card {
+  height: 100%;
+  padding: 1rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+[data-skin="polymarket"] .market-list .market-card:first-child {
+  padding-top: 1rem;
+}
+
+[data-skin="polymarket"] .market-title {
+  font-size: 1.12rem;
+  letter-spacing: -0.015em;
+}
+
+[data-skin="polymarket"] .market-detail h1.market-title {
+  font-size: clamp(1.55rem, 2.6vw, 2.1rem);
+}
+
+[data-skin="polymarket"] .market-thesis {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+[data-skin="polymarket"] .odds-value {
+  font-size: 2rem;
+  font-weight: 650;
+}
+
+[data-skin="polymarket"] .odds[data-lean="yes"] .odds-value {
+  color: var(--yes-ink);
+}
+
+[data-skin="polymarket"] .odds[data-lean="no"] .odds-value {
+  color: var(--no-ink);
+}
+
+[data-skin="polymarket"] .odds-bar {
+  height: 0.5rem;
+}
+
+[data-skin="polymarket"] .vote {
+  margin-top: auto;
+}
+
+[data-skin="polymarket"] .vote-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+[data-skin="polymarket"] .vote-btn {
+  border: 0;
+  border-radius: 8px;
+  font-weight: 650;
+}
+
+[data-skin="polymarket"] .vote-btn[data-vote="yes"] {
+  background: var(--yes);
+  color: var(--yes-text);
+}
+
+[data-skin="polymarket"] .vote-btn[data-vote="no"] {
+  background: var(--no);
+  color: var(--no-text);
+}
+
+[data-skin="polymarket"] .vote-btn[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+
+[data-skin="polymarket"] .post-teaser,
+[data-skin="polymarket"] .legacy {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  background: var(--bg-elevated);
+}
+
+[data-skin="polymarket"] .site-footer {
+  border-top-color: var(--line);
+}
